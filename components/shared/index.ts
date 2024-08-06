@@ -7,3 +7,6 @@ export { Categories } from "./categories";
 export { SortPopup } from "./sort-popup";
 export { TopBar } from "./top-bar";
 export { RangeSlider } from "./range-slider";
+export { ProductCard } from "./product-card";
+export { CheckboxFiltersGroup } from "./checkbox-filters-group";
+export { ProductGroupList } from "./product-group-list";
