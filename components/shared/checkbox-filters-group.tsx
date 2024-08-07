@@ -4,7 +4,7 @@ import React, { ChangeEvent, useState } from "react";
 
 import { FilterCheckbox, FilterChecboxProps } from "./filter-checkbox";
 import { Input } from "../ui";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 type Item = FilterChecboxProps;
 
@@ -31,8 +31,6 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
 }) => {
   const [showAll, setShowAll] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-
-  console.log(items);
 
   const list = showAll
     ? items.filter((item) =>

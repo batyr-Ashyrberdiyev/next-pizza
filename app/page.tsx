@@ -30,7 +30,12 @@ export default function Home() {
               <ProductGroupList
                 title={"Пиццы"}
                 items={pizzasData}
-                categoryId={0}
+                categoryId={1}
+              />
+              <ProductGroupList
+                title={"Комбо"}
+                items={pizzasData}
+                categoryId={2}
               />
             </div>
           </div>
