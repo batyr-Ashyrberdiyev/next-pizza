@@ -1,24 +1,33 @@
-import { hashSync } from 'bcrypt';
-import { prisma } from './prisma-client';
+import { hashSync } from "bcrypt";
+import { prisma } from "./prisma-client";
+import { categories, ingredients } from "./constants";
 
 async function up() {
   await prisma.user.createMany({
     data: [
       {
-        fullname: 'User',
-        email: 'user@test.ru',
-        password: hashSync('111111', 10),
+        fullname: "User user test",
+        email: "user@test.ru",
+        password: hashSync("111111", 10),
         verified: new Date(),
-        role: 'USER',
+        role: "USER",
       },
       {
-        fullname: 'Admin',
-        email: 'admin@test.ru',
-        password: hashSync('111111', 10),
+        fullname: "Admin",
+        email: "admin@test.ru",
+        password: hashSync("111111", 10),
         verified: new Date(),
-        role: 'ADMIN',
+        role: "ADMIN",
       },
     ],
+  });
+
+  await prisma.category.createMany({
+    data: categories,
+  });
+
+  await prisma.ingredient.createMany({
+    data: ingredients,
   });
 }
 
