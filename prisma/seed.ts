@@ -94,17 +94,56 @@ async function up() {
 
   await prisma.productItem.createMany({
     data: [
+      // Пицца "Пепперони фреш"
+      generateProductItem({ productId: pizza1.id, pizzaType: 1, size: 20 }),
+      generateProductItem({ productId: pizza1.id, pizzaType: 2, size: 30 }),
+      generateProductItem({ productId: pizza1.id, pizzaType: 2, size: 40 }),
+
+      // Пицца "Сырная"
+      generateProductItem({ productId: pizza2.id, pizzaType: 1, size: 20 }),
+      generateProductItem({ productId: pizza2.id, pizzaType: 1, size: 30 }),
+      generateProductItem({ productId: pizza2.id, pizzaType: 1, size: 40 }),
+      generateProductItem({ productId: pizza2.id, pizzaType: 2, size: 20 }),
+      generateProductItem({ productId: pizza2.id, pizzaType: 2, size: 30 }),
+      generateProductItem({ productId: pizza2.id, pizzaType: 2, size: 40 }),
+
+      // Пицца "Чоризо фреш"
+      generateProductItem({ productId: pizza3.id, pizzaType: 1, size: 20 }),
+      generateProductItem({ productId: pizza3.id, pizzaType: 2, size: 30 }),
+      generateProductItem({ productId: pizza3.id, pizzaType: 2, size: 40 }),
+
+      // Остальные продукты
+      generateProductItem({ productId: 1 }),
+      generateProductItem({ productId: 2 }),
+      generateProductItem({ productId: 3 }),
+      generateProductItem({ productId: 4 }),
+      generateProductItem({ productId: 5 }),
+      generateProductItem({ productId: 6 }),
+      generateProductItem({ productId: 7 }),
+      generateProductItem({ productId: 8 }),
+      generateProductItem({ productId: 9 }),
+      generateProductItem({ productId: 10 }),
+      generateProductItem({ productId: 11 }),
+      generateProductItem({ productId: 12 }),
+      generateProductItem({ productId: 13 }),
+      generateProductItem({ productId: 14 }),
+      generateProductItem({ productId: 15 }),
+      generateProductItem({ productId: 16 }),
+      generateProductItem({ productId: 17 }),
+    ],
+  });
+
+  await prisma.cart.createMany({
+    data: [
       {
-        productId: pizza1.id,
-        price: 300,
-        pizzaType: 2,
-        size: 30,
+        userId: 1,
+        totalAmount: 0,
+        token: "21321",
       },
       {
-        productId: pizza1.id,
-        price: 350,
-        pizzaType: 1,
-        size: 40,
+        userId: 2,
+        totalAmount: 0,
+        token: "21321",
       },
     ],
   });
@@ -112,6 +151,8 @@ async function up() {
 
 async function down() {
   await prisma.$executeRaw`TRUNCATE TABLE "User" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "Category" RESTART IDENTITY CASCADE`;
+  await prisma.$executeRaw`TRUNCATE TABLE "Product" RESTART IDENTITY CASCADE`;
 }
 
 async function main() {
