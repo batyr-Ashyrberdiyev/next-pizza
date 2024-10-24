@@ -3,7 +3,8 @@
 import { cn } from '@/lib/utils';
 import { Api } from '@/services/api-client';
 import { Product } from '@prisma/client';
-import { Link, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
+import Link from 'next/link';
 import React, { useEffect, useInsertionEffect, useRef, useState } from 'react';
 import { useDebounceCallback, useDebounceValue, useOnClickOutside } from 'usehooks-ts';
 import { useScrollLock } from 'usehooks-ts';
@@ -34,7 +35,10 @@ export const SearchInput = ({ className }: Props) => {
   };
 
   useEffect(() => {
-    Api.products.search(searchQuery).then((items) => setProducts(items));
+    Api.products
+      .search(searchQuery)
+      .then((items) => setProducts(items))
+      .catch((e) => console.log(e));
   }, [searchQuery]);
 
   console.log(products);
