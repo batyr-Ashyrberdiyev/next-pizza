@@ -1,4 +1,4 @@
-import { Ingredient, Product } from '@prisma/client';
+import { Ingredient } from '@prisma/client';
 import { axiosInstance } from './instatnce';
 import { ApiRoutes } from './constants';
 
