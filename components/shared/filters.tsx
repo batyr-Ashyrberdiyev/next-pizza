@@ -1,22 +1,33 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Title } from './title';
-import { FilterCheckbox } from './filter-checkbox';
 import { Input } from '../ui';
 import { RangeSlider } from './range-slider';
 import { CheckboxFiltersGroup } from './checkbox-filters-group';
 import useFilterIngredients from '@/hooks/use-filter-ingredients';
+import { useSet } from 'react-use';
+import qs from 'qs';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface PriceProps {
-  priceFrom: number;
-  priceTo: number;
+  priceFrom?: number;
+  priceTo?: number;
 }
 
 export const Filters: FC = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const { ingredients, loading, selectedIds, onAddId } = useFilterIngredients();
 
-  const [prices, setPrice] = useState<PriceProps>({ priceFrom: 0, priceTo: 5000 });
+  const [prices, setPrice] = useState<PriceProps>({
+    priceFrom: Number(searchParams.get('priceFrom')) || undefined,
+    priceTo: Number(searchParams.get('priceTo')) || undefined,
+  });
+
+  const [sizes, { toggle: toggleSizes }] = useSet(new Set<string>([]));
+  const [pizzaTypes, { toggle: togglePizzaTypes }] = useSet(new Set<string>([]));
 
   const items = ingredients.map((item) => ({ value: String(item.id), text: item.name }));
 
@@ -27,14 +38,62 @@ export const Filters: FC = () => {
     });
   };
 
+  useEffect(() => {
+    const filters = {
+      ...prices,
+      pizzaTypes: Array.from(pizzaTypes),
+      sizes: Array.from(sizes),
+      ingredients: Array.from(selectedIds),
+    };
+
+    const query = qs.stringify(filters, {
+      arrayFormat: 'comma',
+    });
+
+    router.push(`?${query}`, { scroll: false });
+  }, [prices, pizzaTypes, sizes, selectedIds, router]);
+
   return (
     <div className="">
       <Title text="Фильтрация" size="sm" className="mb-5 font-bold" />
 
-      <div className="flex flex-col gap-4">
-        <FilterCheckbox name="sd" text="Можно собирать" value="1" />
-        <FilterCheckbox name="sdsad" text="Новинки" value="2" />
-      </div>
+      <CheckboxFiltersGroup
+        title="Размеры"
+        name="sizes"
+        className="mb-5"
+        onClickCheckbox={toggleSizes}
+        items={[
+          {
+            text: '20 см',
+            value: '20',
+          },
+          {
+            text: '30 см',
+            value: '30',
+          },
+          {
+            text: '40 см',
+            value: '40',
+          },
+        ]}
+      />
+
+      <CheckboxFiltersGroup
+        title="Тип теста"
+        name="types"
+        className="mb-5"
+        onClickCheckbox={togglePizzaTypes}
+        items={[
+          {
+            text: 'Тонкое',
+            value: '1',
+          },
+          {
+            text: 'Традиционное',
+            value: '2',
+          },
+        ]}
+      />
 
       <div className="mt-5 border-y border-y-neutral-100 py-6 pb-7">
         <p className="font-bold mb-3">Цена от и до:</p>
@@ -58,7 +117,13 @@ export const Filters: FC = () => {
           />
         </div>
 
-        <RangeSlider min={0} max={5000} step={10} value={[0, 5000]} />
+        <RangeSlider
+          onValueChange={([priceFrom, priceTo]) => setPrice({ priceFrom, priceTo })}
+          min={0}
+          max={1000}
+          step={10}
+          value={[prices.priceFrom || 0, prices.priceTo || 1000]}
+        />
       </div>
 
       <CheckboxFiltersGroup
@@ -70,7 +135,7 @@ export const Filters: FC = () => {
         items={items}
         loading={loading}
         onClickCheckbox={onAddId}
-        selectedIds={selectedIds}
+        selected={selectedIds}
       />
     </div>
   );
