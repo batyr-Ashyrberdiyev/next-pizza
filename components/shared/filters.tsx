@@ -26,8 +26,12 @@ export const Filters: FC = () => {
     priceTo: Number(searchParams.get('priceTo')) || undefined,
   });
 
-  const [sizes, { toggle: toggleSizes }] = useSet(new Set<string>([]));
-  const [pizzaTypes, { toggle: togglePizzaTypes }] = useSet(new Set<string>([]));
+  const [sizes, { toggle: toggleSizes }] = useSet(
+    new Set<string>(searchParams.has('sizes') ? searchParams.get('sizes')?.split(',') : []),
+  );
+  const [pizzaTypes, { toggle: togglePizzaTypes }] = useSet(
+    new Set<string>(searchParams.has('pizzaTypes') ? searchParams.get('pizzaTypes') : []),
+  );
 
   const items = ingredients.map((item) => ({ value: String(item.id), text: item.name }));
 
@@ -54,13 +58,14 @@ export const Filters: FC = () => {
   }, [prices, pizzaTypes, sizes, selectedIds, router]);
 
   return (
-    <div className="">
+    <div>
       <Title text="Фильтрация" size="sm" className="mb-5 font-bold" />
 
       <CheckboxFiltersGroup
         title="Размеры"
         name="sizes"
         className="mb-5"
+        selected={sizes}
         onClickCheckbox={toggleSizes}
         items={[
           {
