@@ -1,55 +1,25 @@
-"use client";
+'use client';
 
-import { FC, useEffect, useState } from "react";
-import { Title } from "./title";
-import { Input } from "../ui";
-import { RangeSlider } from "./range-slider";
-import { CheckboxFiltersGroup } from "./checkbox-filters-group";
-import useFilterIngredients from "@/hooks/use-filter-ingredients";
-import { useSet } from "react-use";
-import qs from "qs";
-import { useRouter, useSearchParams } from "next/navigation";
-
-interface PriceProps {
-  priceFrom?: number;
-  priceTo?: number;
-}
+import { FC, useEffect } from 'react';
+import { Title } from './title';
+import { Input } from '../ui';
+import { RangeSlider } from './range-slider';
+import { CheckboxFiltersGroup } from './checkbox-filters-group';
+import qs from 'qs';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useIngredients } from '@/hooks/use-ingredients';
+import { PriceProps } from '@/hooks/use-filters';
 
 export const Filters: FC = () => {
+  const { ingredients, loading } = useIngredients();
+
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  const { ingredients, loading, selectedIds, onAddId } = useFilterIngredients(
-    searchParams.get("ingredients")?.split(",")
-  );
-
-  const [prices, setPrice] = useState<PriceProps>({
-    priceFrom: Number(searchParams.get("priceFrom")) || undefined,
-    priceTo: Number(searchParams.get("priceTo")) || undefined,
-  });
-
-  const [sizes, { toggle: toggleSizes }] = useSet(
-    new Set<string>(
-      searchParams.has("sizes") ? searchParams.get("sizes")?.split(",") : []
-    )
-  );
-  const [pizzaTypes, { toggle: togglePizzaTypes }] = useSet(
-    new Set<string>(
-      searchParams.has("pizzaTypes") ? searchParams.get("pizzaTypes") : []
-    )
-  );
 
   const items = ingredients.map((item) => ({
     value: String(item.id),
     text: item.name,
   }));
-
-  const updatePrice = (name: keyof PriceProps, value: number) => {
-    setPrice({
-      ...prices,
-      [name]: value,
-    });
-  };
 
   useEffect(() => {
     const filters = {
@@ -60,7 +30,7 @@ export const Filters: FC = () => {
     };
 
     const query = qs.stringify(filters, {
-      arrayFormat: "comma",
+      arrayFormat: 'comma',
     });
 
     router.push(`?${query}`, { scroll: false });
@@ -78,16 +48,16 @@ export const Filters: FC = () => {
         onClickCheckbox={toggleSizes}
         items={[
           {
-            text: "20 см",
-            value: "20",
+            text: '20 см',
+            value: '20',
           },
           {
-            text: "30 см",
-            value: "30",
+            text: '30 см',
+            value: '30',
           },
           {
-            text: "40 см",
-            value: "40",
+            text: '40 см',
+            value: '40',
           },
         ]}
       />
@@ -100,12 +70,12 @@ export const Filters: FC = () => {
         onClickCheckbox={togglePizzaTypes}
         items={[
           {
-            text: "Тонкое",
-            value: "1",
+            text: 'Тонкое',
+            value: '1',
           },
           {
-            text: "Традиционное",
-            value: "2",
+            text: 'Традиционное',
+            value: '2',
           },
         ]}
       />
@@ -120,7 +90,7 @@ export const Filters: FC = () => {
             max={1000}
             value={String(prices.priceFrom)}
             defaultValue={0}
-            onChange={(e) => updatePrice("priceFrom", Number(e.target.value))}
+            onChange={(e) => updatePrice('priceFrom', Number(e.target.value))}
           />
           <Input
             type="number"
@@ -128,14 +98,12 @@ export const Filters: FC = () => {
             min={100}
             max={1000}
             value={String(prices.priceTo)}
-            onChange={(e) => updatePrice("priceTo", Number(e.target.value))}
+            onChange={(e) => updatePrice('priceTo', Number(e.target.value))}
           />
         </div>
 
         <RangeSlider
-          onValueChange={([priceFrom, priceTo]) =>
-            setPrice({ priceFrom, priceTo })
-          }
+          onValueChange={([priceFrom, priceTo]) => setPrice({ priceFrom, priceTo })}
           min={0}
           max={1000}
           step={10}
