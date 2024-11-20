@@ -1,40 +1,27 @@
 'use client';
 
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { Title } from './title';
 import { Input } from '../ui';
 import { RangeSlider } from './range-slider';
 import { CheckboxFiltersGroup } from './checkbox-filters-group';
-import qs from 'qs';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useIngredients } from '@/hooks/use-ingredients';
-import { PriceProps } from '@/hooks/use-filters';
+import { useFilters, useIngredients, useQueryFilters } from '@/hooks';
 
 export const Filters: FC = () => {
   const { ingredients, loading } = useIngredients();
+  const filters = useFilters();
 
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  useQueryFilters(filters);
 
   const items = ingredients.map((item) => ({
     value: String(item.id),
     text: item.name,
   }));
 
-  useEffect(() => {
-    const filters = {
-      ...prices,
-      pizzaTypes: Array.from(pizzaTypes),
-      sizes: Array.from(sizes),
-      ingredients: Array.from(selectedIds),
-    };
-
-    const query = qs.stringify(filters, {
-      arrayFormat: 'comma',
-    });
-
-    router.push(`?${query}`, { scroll: false });
-  }, [prices, pizzaTypes, sizes, selectedIds, router]);
+  const updatePrices = (prices: number[]) => {
+    filters.setPrices('priceFrom', prices[0]);
+    filters.setPrices('priceTo', prices[1]);
+  };
 
   return (
     <div>
@@ -44,8 +31,8 @@ export const Filters: FC = () => {
         title="Размеры"
         name="sizes"
         className="mb-5"
-        selected={sizes}
-        onClickCheckbox={toggleSizes}
+        selected={filters.sizes}
+        onClickCheckbox={filters.setSizes}
         items={[
           {
             text: '20 см',
@@ -66,8 +53,8 @@ export const Filters: FC = () => {
         title="Тип теста"
         name="types"
         className="mb-5"
-        selected={pizzaTypes}
-        onClickCheckbox={togglePizzaTypes}
+        selected={filters.pizzaTypes}
+        onClickCheckbox={filters.setPizzaTypes}
         items={[
           {
             text: 'Тонкое',
@@ -88,26 +75,26 @@ export const Filters: FC = () => {
             placeholder="0"
             min={0}
             max={1000}
-            value={String(prices.priceFrom)}
+            value={String(filters.prices.priceFrom)}
             defaultValue={0}
-            onChange={(e) => updatePrice('priceFrom', Number(e.target.value))}
+            onChange={(e) => filters.setPrices('priceFrom', Number(e.target.value))}
           />
           <Input
             type="number"
             placeholder="1000"
             min={100}
             max={1000}
-            value={String(prices.priceTo)}
-            onChange={(e) => updatePrice('priceTo', Number(e.target.value))}
+            value={String(filters.prices.priceTo)}
+            onChange={(e) => filters.setPrices('priceTo', Number(e.target.value))}
           />
         </div>
 
         <RangeSlider
-          onValueChange={([priceFrom, priceTo]) => setPrice({ priceFrom, priceTo })}
+          onValueChange={updatePrices}
           min={0}
           max={1000}
           step={10}
-          value={[prices.priceFrom || 0, prices.priceTo || 1000]}
+          value={[filters.prices.priceFrom || 0, filters.prices.priceTo || 1000]}
         />
       </div>
 
@@ -119,8 +106,8 @@ export const Filters: FC = () => {
         defaultItems={items.slice(0, 6)}
         items={items}
         loading={loading}
-        onClickCheckbox={onAddId}
-        selected={selectedIds}
+        onClickCheckbox={filters.setSelectedIngredients}
+        selected={filters.selectedIngredients}
       />
     </div>
   );

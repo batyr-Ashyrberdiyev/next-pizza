@@ -1,4 +1,4 @@
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useSet } from 'react-use';
 
@@ -7,8 +7,27 @@ export interface PriceProps {
   priceTo?: number;
 }
 
-export const useFilters = () => {
-  const router = useRouter();
+interface QueryFilters extends PriceProps {
+  pizzaTypes: string;
+  sizes: string;
+  ingredients: string;
+}
+
+export interface Filters {
+  sizes: Set<string>;
+  pizzaTypes: Set<string>;
+  selectedIngredients: Set<string>;
+  prices: PriceProps;
+}
+
+interface ReturnProps extends Filters {
+  setPrices: (name: keyof PriceProps, value: number) => void;
+  setPizzaTypes: (value: string) => void;
+  setSizes: (value: string) => void;
+  setSelectedIngredients: (value: string) => void;
+}
+
+export const useFilters = (): ReturnProps => {
   const searchParams = useSearchParams();
 
   const [selectedIngredients, { toggle: toggleIngredients }] = useSet(
@@ -29,10 +48,10 @@ export const useFilters = () => {
   });
 
   const updatePrice = (name: keyof PriceProps, value: number) => {
-    setPrices({
-      ...prices,
+    setPrices((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
   return {
@@ -43,6 +62,6 @@ export const useFilters = () => {
     setPrices: updatePrice,
     setPizzaTypes: togglePizzaTypes,
     setSizes: toggleSizes,
-    setIngredients: toggleIngredients,
+    setSelectedIngredients: toggleIngredients,
   };
 };
