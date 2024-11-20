@@ -1,21 +1,26 @@
-import {
-  Container,
-  ProductCard,
-  ProductGroupList,
-  Title,
-  TopBar,
-} from "@/components/shared";
-import { Filters } from "@/components/shared/filters";
-import { pizzasData } from "@/data/pizzas.data";
+import { Container, ProductGroupList, Title, TopBar } from '@/components/shared';
+import { Filters } from '@/components/shared/filters';
+import { prisma } from '@/prisma/prisma-client';
 
-export default function Home() {
+export default async function Home() {
+  const categories = await prisma.category.findMany({
+    include: {
+      products: {
+        include: {
+          ingredients: true,
+          items: true,
+        },
+      },
+    },
+  });
+
   return (
     <>
       <Container className="mt-10">
         <Title text="Все пиццы" size="lg" className="font-extrabold" />
       </Container>
 
-      <TopBar />
+      <TopBar categories={categories.filter((item) => item.products.length > 0)} />
 
       <Container className="pb-14 mt-10">
         <div className="flex gap-[60px]">
@@ -27,16 +32,17 @@ export default function Home() {
           {/* Product List */}
           <div className="flex-1">
             <div className="flex flex-col gap-16">
-              <ProductGroupList
-                title={"Пиццы"}
-                items={pizzasData}
-                categoryId={1}
-              />
-              <ProductGroupList
-                title={"Комбо"}
-                items={pizzasData}
-                categoryId={2}
-              />
+              {categories.map(
+                (item) =>
+                  item.products.length > 0 && (
+                    <ProductGroupList
+                      key={item.id}
+                      title={item.name}
+                      items={item.products}
+                      categoryId={item.id}
+                    />
+                  ),
+              )}
             </div>
           </div>
         </div>
