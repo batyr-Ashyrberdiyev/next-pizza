@@ -1,20 +1,21 @@
 'use client';
 
-import { cats } from '@/data/category.data';
 import { cn } from '@/lib/utils';
 import { useZusCategory } from '@/store/category';
+import { Category } from '@prisma/client';
 import React from 'react';
 
 interface Props {
   className?: string;
+  items: Category[];
 }
 
-export const Categories: React.FC<Props> = ({ className }) => {
+export const Categories: React.FC<Props> = ({ className, items }) => {
   const activeId = useZusCategory((state) => state.activeId);
 
   return (
     <div className={cn('inline-flex gap-1 bg-gray-50 p-1 rounded-2xl', className)}>
-      {cats.map(({ name, id }, index) => (
+      {items.map(({ name, id }, index) => (
         <a
           href={`/#${name}`}
           key={index}
