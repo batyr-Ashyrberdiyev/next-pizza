@@ -23,7 +23,6 @@ export const ProductGroupList: FC<Props> = ({
   categoryId,
 }) => {
   const setActiveId = useZusCategory((state) => state.setActiveId);
-  const activeId = useZusCategory((state) => state.activeId);
   const { isIntersecting, ref } = useIntersectionObserver({
     threshold: 0.4,
   });
