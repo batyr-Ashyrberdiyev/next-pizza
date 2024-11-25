@@ -3,15 +3,15 @@ import React, { FC } from 'react';
 
 interface Props {
   className?: string;
-  src: string;
+  imageUrl: string;
   size: number;
 }
 
-export const ProductImage: FC<Props> = ({ className, src, size = 20 }) => {
+export const ProductImage: FC<Props> = ({ className, imageUrl, size = 20 }) => {
   return (
     <div className={cn('flex items-center justify-center flex-1 relative w-full', className)}>
       <img
-        src={src}
+        src={imageUrl}
         alt="logo"
         className={cn('relative left-2 top-2 transition-all z-10 duration-300', {
           'size-[300px]': size === 20,

@@ -1,4 +1,5 @@
-export { ChooseProdctModal } from './modals/choose-product-modal';
+export { ChoosePizzaForm } from './choose-pizza-form';
+export { ChooseProductModal } from './modals/choose-product-modal';
 export { Filters } from './filters';
 export { FilterCheckbox } from './filter-checkbox';
 export { Container } from './container';
@@ -14,3 +15,5 @@ export { ProductCard } from './product-card';
 export { ProductImage } from './product-image';
 export { ProductGroupList } from './product-group-list';
 export { SearchInput } from './search-input';
+
+export * from './modals';
