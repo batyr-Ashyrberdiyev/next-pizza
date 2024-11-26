@@ -7,7 +7,7 @@ interface Props {
   size: number;
 }
 
-export const ProductImage: FC<Props> = ({ className, imageUrl, size = 20 }) => {
+export const ProductImage: FC<Props> = ({ className, imageUrl, size = 30 }) => {
   return (
     <div className={cn('flex items-center justify-center flex-1 relative w-full', className)}>
       <img
@@ -20,8 +20,8 @@ export const ProductImage: FC<Props> = ({ className, imageUrl, size = 20 }) => {
         })}
       />
 
-      <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 border-dashed border-2 rounded-full size-[450px] border-gray-200" />
-      <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 border-dashed border-2 rounded-full size-[370px] border-gray-200" />
+      {/* <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 border-dashed border-2 rounded-full size-[450px] border-gray-200" />
+      <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 border-dashed border-2 rounded-full size-[370px] border-gray-200" /> */}
     </div>
   );
 };
