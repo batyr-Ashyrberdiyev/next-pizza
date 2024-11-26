@@ -5,20 +5,14 @@ import { Api } from '@/services/api-client';
 import { Product } from '@prisma/client';
 import { Search } from 'lucide-react';
 import Link from 'next/link';
-import React, { useEffect, useInsertionEffect, useRef, useState } from 'react';
-import { useDebounceCallback, useDebounceValue, useOnClickOutside } from 'usehooks-ts';
-import { useScrollLock } from 'usehooks-ts';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDebounceCallback, useOnClickOutside } from 'usehooks-ts';
 
 type Props = {
   className?: string;
 };
 
 export const SearchInput = ({ className }: Props) => {
-  const { lock, unlock } = useScrollLock({
-    autoLock: false,
-    lockTarget: '#scrollable',
-  });
-
   const [focused, setFocused] = useState(false);
   const [value, setValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,8 +34,6 @@ export const SearchInput = ({ className }: Props) => {
       .then((items) => setProducts(items))
       .catch((e) => console.log(e));
   }, [searchQuery]);
-
-  console.log(products);
 
   return (
     <>
