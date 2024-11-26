@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { ProductImage } from './product-image';
 import { Title } from './title';
 import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
 
 interface Props {
   imageUrl: string;
@@ -12,7 +13,7 @@ interface Props {
   className?: string;
 }
 
-export const ChoosePizzaForm: FC<Props> = ({
+export const ChooseProductForm: FC<Props> = ({
   className,
   imageUrl,
   name,
@@ -24,7 +25,7 @@ export const ChoosePizzaForm: FC<Props> = ({
   const totalPrice = 350;
 
   return (
-    <div className={className}>
+    <div className={cn('flex flex-1', className)}>
       <ProductImage imageUrl={imageUrl} size={30} />
 
       <div className="w-[490px] bg-[#F7F6F5] p-7">
@@ -32,7 +33,7 @@ export const ChoosePizzaForm: FC<Props> = ({
 
         <p className="text-gray-400">{textDetails}</p>
 
-        <Button className="h-[55px] px-10 text-base rounded-[18px] w-full">
+        <Button className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
           Добавить в корзину за {totalPrice} ₱
         </Button>
       </div>
