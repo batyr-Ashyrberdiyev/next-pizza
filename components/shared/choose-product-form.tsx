@@ -7,20 +7,12 @@ import { cn } from '@/lib/utils';
 interface Props {
   imageUrl: string;
   name: string;
-  ingredients: any[];
   items?: any[];
   onClickAdd?: VoidFunction;
   className?: string;
 }
 
-export const ChooseProductForm: FC<Props> = ({
-  className,
-  imageUrl,
-  name,
-  ingredients,
-  items,
-  onClickAdd,
-}) => {
+export const ChooseProductForm: FC<Props> = ({ className, imageUrl, name, items, onClickAdd }) => {
   const textDetails = '30 см, традицицонное тесто 30';
   const totalPrice = 350;
 
