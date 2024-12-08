@@ -1,18 +1,24 @@
-'use client';
+"use client";
 
-import { FC, useState } from 'react';
-import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
-import { GroupVariants, ProductImage, IngredientItem, Title } from './';
-import { PizzaSize, pizzaSizes, PizzaType } from '@/constantans/pizza';
-import { Ingredient } from '@prisma/client';
-import { useSet } from 'react-use';
+import { FC, useState } from "react";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { GroupVariants, IngredientItem, Title, PizzaImage } from "./";
+import {
+  mapPizzaType,
+  PizzaSize,
+  pizzaSizes,
+  PizzaType,
+} from "@/constantans/pizza";
+import { Ingredient } from "@prisma/client";
+import { useSet } from "react-use";
+import { CloudLightning } from "lucide-react";
 
 interface Props {
   imageUrl: string;
   name: string;
   ingredients: Ingredient[];
-  items?: any[];
+  items: any[];
   onClickAdd?: VoidFunction;
   className?: string;
 }
@@ -28,14 +34,26 @@ export const ChoosePizzaForm: FC<Props> = ({
   const [size, setSize] = useState<PizzaSize>(20);
   const [type, setType] = useState<PizzaType>(1);
 
-  const textDetails = '30 см, традицицонное тесто 30';
-  const totalPrice = 350;
+  const [selectedIngredients, { toggle: toggleIngredients }] = useSet(
+    new Set<number>([])
+  );
 
-  const [selectedIngredients, { toggle: toggleIngredients }] = useSet(new Set<number>([]));
+  const textDetails = `${size} см, традицицонное тесто ${mapPizzaType[type]}`;
+
+  const pizzaPrice = items.find(
+    (item) => item.pizzaType === type && item.size === size
+  )!.price;
+  const totalIngredientsPrice = ingredients
+    .filter((ingr) => selectedIngredients.has(ingr.id))
+    .reduce((acc, ingr) => acc + ingr.price, 0);
+
+  const totalPrice = pizzaPrice + totalIngredientsPrice;
+
+  console.log(items);
 
   return (
-    <div className={cn('flex flex-1', className)}>
-      <ProductImage imageUrl={imageUrl} size={size} />
+    <div className={cn("flex flex-1", className)}>
+      <PizzaImage imageUrl={imageUrl} size={size} />
 
       <div className="w-[490px] bg-[#F7F6F5] p-7">
         <Title text={name} size="md" className="font-extrabold mb-1" />

@@ -1,6 +1,6 @@
-import { cn } from '@/lib/utils';
-import { CircleCheck } from 'lucide-react';
-import { FC } from 'react';
+import { cn } from "@/lib/utils";
+import { CircleCheck } from "lucide-react";
+import { FC } from "react";
 
 interface Props {
   imageUrl: string;
@@ -23,11 +23,14 @@ export const IngredientItem: FC<Props> = ({
     <div
       onClick={onClick}
       className={cn(
-        'flex items-center flex-col rounded-md p-1 text-center relative cursor-pointer shadow-md bg-white w-32',
-        { 'border border-primary': active },
-        className,
-      )}>
-      {active && <CircleCheck className="absolute top-2 right-2 text-primary" />}
+        "flex items-center flex-col rounded-md transition-all p-1 text-center relative cursor-pointer shadow-md bg-white w-32",
+        { "border border-primary": active },
+        className
+      )}
+    >
+      {active && (
+        <CircleCheck className="absolute top-2 right-2 text-primary" />
+      )}
       <img src={imageUrl} />
       <span className="text-sm mb-1">{name}</span>
       <span className="font-bold">{price} ₱</span>
