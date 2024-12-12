@@ -49,8 +49,6 @@ export const ChoosePizzaForm: FC<Props> = ({
 
   const totalPrice = pizzaPrice + totalIngredientsPrice;
 
-  console.log(items);
-
   return (
     <div className={cn("flex flex-1", className)}>
       <PizzaImage imageUrl={imageUrl} size={size} />
