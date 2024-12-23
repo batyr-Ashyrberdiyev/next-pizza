@@ -12,6 +12,7 @@ interface ReturnProps {
   setSize: (size: PizzaSize) => void;
   setType: (type: PizzaType) => void;
   addIngredient: (id: number) => void;
+  availableSizes: Variant[];
 }
 
 export const usePizzaOptions = (items: ProductItem[]): ReturnProps => {
@@ -41,5 +42,6 @@ export const usePizzaOptions = (items: ProductItem[]): ReturnProps => {
     setType,
     selectedIngredients,
     addIngredient,
+    availableSizes,
   };
 };

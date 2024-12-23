@@ -1,22 +1,12 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { GroupVariants, IngredientItem, Title, PizzaImage } from "./";
-import {
-  mapPizzaType,
-  PizzaSize,
-  pizzaSizes,
-  PizzaType,
-} from "@/constantans/pizza";
+import { PizzaSize, PizzaType } from "@/constantans/pizza";
 import { Ingredient, ProductItem } from "@prisma/client";
-import { useSet } from "react-use";
-import {
-  calcTotalPizzaPrice,
-  getAvailablePizzaSizes,
-  getPizzaDetails,
-} from "@/lib";
+import { getPizzaDetails } from "@/lib";
 import { usePizzaOptions } from "@/hooks/use-pizza-options";
 
 interface Props {
@@ -36,18 +26,17 @@ export const ChoosePizzaForm: FC<Props> = ({
   items,
   onClickAddCart,
 }) => {
-  const { size, type, setSize, setType, addIngredient, selectedIngredients } =
-    usePizzaOptions(items);
-
-  const totalPrice = calcTotalPizzaPrice(
-    type,
+  const {
     size,
-    items,
-    ingredients,
-    selectedIngredients
-  );
+    type,
+    setSize,
+    setType,
+    addIngredient,
+    selectedIngredients,
+    availableSizes,
+  } = usePizzaOptions(items);
 
-  const { totalPrice } = getPizzaDetails(
+  const { totalPrice, textDetails } = getPizzaDetails(
     type,
     size,
     items,
@@ -76,7 +65,7 @@ export const ChoosePizzaForm: FC<Props> = ({
 
         <div className="flex flex-col gap-3 mt-5">
           <GroupVariants
-            items={availablePizzaSizes}
+            items={availableSizes}
             value={String(size)}
             onClick={(value) => setSize(Number(value) as PizzaSize)}
           />
@@ -94,7 +83,7 @@ export const ChoosePizzaForm: FC<Props> = ({
                   key={ingredient.id}
                   {...ingredient}
                   active={selectedIngredients.has(ingredient.id)}
-                  onClick={() => toggleIngredients(ingredient.id)}
+                  onClick={() => addIngredient(ingredient.id)}
                 />
               ))}
             </div>
