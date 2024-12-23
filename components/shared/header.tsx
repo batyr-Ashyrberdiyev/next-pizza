@@ -1,6 +1,9 @@
-import Image from "next/image";
-import { CartButton, Container, SearchInput } from "./";
-import Link from "next/link";
+import Image from 'next/image';
+import { CartButton, Container, SearchInput } from './';
+import Link from 'next/link';
+import { Button } from '../ui';
+import { User } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface Props {
   className?: string;
@@ -15,9 +18,7 @@ export const Header: React.FC<Props> = ({ className }) => {
 
           <div>
             <h1 className="text-2xl uppercase font-black">Next Pizza</h1>
-            <p className="text-sm text-gray-400 leading-3">
-              вкусней уже некуда
-            </p>
+            <p className="text-sm text-gray-400 leading-3">вкусней уже некуда</p>
           </div>
         </Link>
 
@@ -25,7 +26,14 @@ export const Header: React.FC<Props> = ({ className }) => {
           <SearchInput />
         </div>
 
-        <CartButton />
+        <div className={cn('flex items-center gap-4', className)}>
+          <Button variant="outline" className="flex items-center gap-3">
+            <User size={16} />
+            Войти
+          </Button>
+
+          <CartButton />
+        </div>
       </Container>
     </header>
   );
