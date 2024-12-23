@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
-import { FC, PropsWithChildren } from "react";
+'use client';
+
+import { FC, PropsWithChildren, useEffect } from 'react';
 import {
   Sheet,
   SheetContent,
@@ -7,19 +8,26 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "../ui/sheet";
-import Link from "next/link";
-import { Button } from "../ui";
-import { ArrowRight } from "lucide-react";
+} from '../ui/sheet';
+import Link from 'next/link';
+import { Button } from '../ui';
+import { ArrowRight } from 'lucide-react';
+import { useCartStore } from '@/store/cart';
+import { CartDrawerItem } from './cart-drawer-item';
+import { getCartDetails, getCartItemDetails } from '@/lib';
+import { PizzaSize, PizzaType } from '@/constantans/pizza';
 
-interface Props {
-  className?: string;
-}
+export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
+  const [items, fetchCartItems, totalAmount] = useCartStore((state) => [
+    state.items,
+    state.fetchCartItems,
+    state.totalAmount,
+  ]);
 
-export const CartDrawer: FC<PropsWithChildren<Props>> = ({
-  className,
-  children,
-}) => {
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
@@ -31,7 +39,28 @@ export const CartDrawer: FC<PropsWithChildren<Props>> = ({
           </SheetTitle>
         </SheetHeader>
 
-        <div className="flex-1 -mx-6 mt-5 overflow-auto scrollbar"></div>
+        <div className="flex-1 -mx-6 mt-5 overflow-auto">
+          {items.map((item) => (
+            <CartDrawerItem
+              className="mb-2"
+              key={item.id}
+              id={item.id}
+              imageUrl={item.imageUrl}
+              details={
+                item.pizzaSize && item.pizzaType
+                  ? getCartItemDetails(
+                      item.ingredients,
+                      item.pizzaType as PizzaType,
+                      item.pizzaSize as PizzaSize,
+                    )
+                  : ''
+              }
+              name={item.name}
+              price={item.price}
+              quantity={item.quantity}
+            />
+          ))}
+        </div>
 
         <SheetFooter className="-mx-6 bg-white p-8">
           <div className="w-full">
