@@ -28,6 +28,8 @@ export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
     fetchCartItems();
   }, []);
 
+  const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {};
+
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
