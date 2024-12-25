@@ -16,19 +16,24 @@ import { useCartStore } from '@/store/cart';
 import { CartDrawerItem } from './cart-drawer-item';
 import { getCartDetails, getCartItemDetails } from '@/lib';
 import { PizzaSize, PizzaType } from '@/constantans/pizza';
+import { updateItemQuantity } from '@/services/cart';
 
 export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
-  const [items, fetchCartItems, totalAmount] = useCartStore((state) => [
+  const [items, fetchCartItems, totalAmount, removeCartItem] = useCartStore((state) => [
     state.items,
     state.fetchCartItems,
     state.totalAmount,
+    state.removeCartItem,
   ]);
 
   useEffect(() => {
     fetchCartItems();
   }, []);
 
-  const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {};
+  const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
+    const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
+    updateItemQuantity(id, newQuantity);
+  };
 
   return (
     <Sheet>
@@ -60,6 +65,8 @@ export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
               name={item.name}
               price={item.price}
               quantity={item.quantity}
+              onClickCountButton={(type) => onClickCountButton(item.id, item.quantity, type)}
+              onCLickRemove={() => removeCartItem(item.id)}
             />
           ))}
         </div>
@@ -72,7 +79,7 @@ export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
                 <div className="flex-1 border-b border-dashed border-b-neutral-200 relative -top-1 mx-2"></div>
               </span>
 
-              <span className="font-bold text-lg ">500 ₽</span>
+              <span className="font-bold text-lg ">{totalAmount}₱</span>
             </div>
 
             <Link href="/cart">
