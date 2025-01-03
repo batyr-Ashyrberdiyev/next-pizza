@@ -6,19 +6,10 @@ import Link from 'next/link';
 import { Button } from '../ui';
 import { User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
 
 interface Props {
   className?: string;
 }
-
-type AnalyzeResult = {
-  strings: number;
-  numbers: number;
-  booleans: boolean;
-  objects: object;
-  arrays: object;
-};
 
 export const Header: React.FC<Props> = ({ className }) => {
   return (
