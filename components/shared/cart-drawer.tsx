@@ -1,6 +1,5 @@
 "use client";
 
-import { FC, PropsWithChildren, useEffect } from "react";
 import {
   Sheet,
   SheetContent,
@@ -9,24 +8,29 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
+import { FC, PropsWithChildren, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "../ui";
 import { ArrowRight } from "lucide-react";
 import { useCartStore } from "@/store/cart";
 import { CartDrawerItem } from "./cart-drawer-item";
-import { getCartDetails, getCartItemDetails } from "@/lib";
+import { getCartItemDetails } from "@/lib";
 import { PizzaSize, PizzaType } from "@/constantans/pizza";
-import { updateItemQuantity } from "@/services/cart";
 
 export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
-  const [items, fetchCartItems, totalAmount, removeCartItem] = useCartStore(
-    (state) => [
-      state.items,
-      state.fetchCartItems,
-      state.totalAmount,
-      state.removeCartItem,
-    ]
-  );
+  const [
+    items,
+    fetchCartItems,
+    totalAmount,
+    removeCartItem,
+    updateItemQuantity,
+  ] = useCartStore((state) => [
+    state.items,
+    state.fetchCartItems,
+    state.totalAmount,
+    state.removeCartItem,
+    state.updateItemQuantity,
+  ]);
 
   useEffect(() => {
     fetchCartItems();
@@ -53,30 +57,32 @@ export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
         </SheetHeader>
 
         <div className="flex-1 -mx-6 mt-5 overflow-auto">
-          {items.map((item) => (
-            <CartDrawerItem
-              className="mb-2"
-              key={item.id}
-              id={item.id}
-              imageUrl={item.imageUrl}
-              details={
-                item.pizzaSize && item.pizzaType
-                  ? getCartItemDetails(
-                      item.ingredients,
-                      item.pizzaType as PizzaType,
-                      item.pizzaSize as PizzaSize
-                    )
-                  : ""
-              }
-              name={item.name}
-              price={item.price}
-              quantity={item.quantity}
-              onClickCountButton={(type) =>
-                onClickCountButton(item.id, item.quantity, type)
-              }
-              onCLickRemove={() => removeCartItem(item.id)}
-            />
-          ))}
+          {items.map((item) => {
+            return (
+              <CartDrawerItem
+                className="mb-2"
+                key={item.id}
+                id={item.id}
+                imageUrl={item.imageUrl}
+                details={
+                  item.pizzaSize && item.pizzaType
+                    ? getCartItemDetails(
+                        item.ingredients,
+                        item.pizzaType as PizzaType,
+                        item.pizzaSize as PizzaSize
+                      )
+                    : ""
+                }
+                name={item.name}
+                price={item.price}
+                quantity={item.quantity}
+                onClickCountButton={(type) =>
+                  onClickCountButton(item.id, item.quantity, type)
+                }
+                onCLickRemove={() => removeCartItem(item.id)}
+              />
+            );
+          })}
         </div>
 
         <SheetFooter className="-mx-6 bg-white p-8">
