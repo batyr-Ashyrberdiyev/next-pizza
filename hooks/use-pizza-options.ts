@@ -8,11 +8,12 @@ import { useSet } from "react-use";
 interface ReturnProps {
   size: PizzaSize;
   type: PizzaType;
+  currentItemId?: number;
+  availableSizes: Variant[];
   selectedIngredients: Set<number>;
   setSize: (size: PizzaSize) => void;
   setType: (type: PizzaType) => void;
   addIngredient: (id: number) => void;
-  availableSizes: Variant[];
 }
 
 export const usePizzaOptions = (items: ProductItem[]): ReturnProps => {
@@ -23,6 +24,10 @@ export const usePizzaOptions = (items: ProductItem[]): ReturnProps => {
   );
 
   const availableSizes = getAvailablePizzaSizes(type, items);
+
+  const currentItemId = items.find(
+    (item) => item.pizzaType === type && item.size === size
+  )?.id;
 
   useEffect(() => {
     const isAvailableSize = availableSizes.find(
@@ -38,10 +43,11 @@ export const usePizzaOptions = (items: ProductItem[]): ReturnProps => {
   return {
     size,
     type,
-    setSize,
     setType,
-    selectedIngredients,
+    setSize,
+    currentItemId,
     addIngredient,
     availableSizes,
+    selectedIngredients,
   };
 };
