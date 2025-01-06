@@ -1,39 +1,40 @@
 "use client";
 
 import { FC } from "react";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { GroupVariants, IngredientItem, Title, PizzaImage } from "./";
-import { PizzaSize, PizzaType } from "@/constantans/pizza";
-import { Ingredient, ProductItem } from "@prisma/client";
+import { Button } from "../ui/button";
 import { getPizzaDetails } from "@/lib";
+import { PizzaType } from "@/constantans/pizza";
+import { Ingredient, ProductItem } from "@prisma/client";
 import { usePizzaOptions } from "@/hooks/use-pizza-options";
+import { GroupVariants, IngredientItem, Title, PizzaImage } from "./";
 
 interface Props {
-  imageUrl: string;
   name: string;
-  ingredients: Ingredient[];
-  items: ProductItem[];
-  onClickAddCart?: VoidFunction;
+  loading?: boolean;
+  imageUrl: string;
   className?: string;
+  items: ProductItem[];
+  ingredients: Ingredient[];
+  onSubmit: (itemId: number, ingredients: number[]) => void;
 }
 
 export const ChoosePizzaForm: FC<Props> = ({
-  className,
-  imageUrl,
   name,
-  ingredients,
   items,
-  onClickAddCart,
+  loading,
+  onSubmit,
+  imageUrl,
+  className,
+  ingredients,
 }) => {
   const {
     size,
     type,
-    setSize,
     setType,
+    currentItemId,
     addIngredient,
     selectedIngredients,
-    availableSizes,
   } = usePizzaOptions(items);
 
   const { totalPrice, textDetails } = getPizzaDetails(
@@ -45,13 +46,9 @@ export const ChoosePizzaForm: FC<Props> = ({
   );
 
   const handleClickAdd = () => {
-    onClickAddCart?.();
-
-    console.log({
-      size,
-      type,
-      ingredients: selectedIngredients,
-    });
+    if (currentItemId) {
+      onSubmit(currentItemId, Array.from(selectedIngredients));
+    }
   };
 
   return (
@@ -61,15 +58,9 @@ export const ChoosePizzaForm: FC<Props> = ({
       <div className="w-[490px] bg-[#F7F6F5] p-7">
         <Title text={name} size="md" className="font-extrabold mb-1" />
 
-        <p className="text-gray-400">{textDetails}</p>
+        <p className="text-gray-400 mb-4">{textDetails}</p>
 
         <div className="flex flex-col gap-3 mt-5">
-          <GroupVariants
-            items={availableSizes}
-            value={String(size)}
-            onClick={(value) => setSize(Number(value) as PizzaSize)}
-          />
-
           <GroupVariants
             items={PizzaType}
             value={String(type)}
@@ -91,6 +82,7 @@ export const ChoosePizzaForm: FC<Props> = ({
         </div>
 
         <Button
+          loading={loading}
           onClick={handleClickAdd}
           className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10"
         >
