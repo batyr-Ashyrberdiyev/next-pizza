@@ -49,10 +49,12 @@ export const ProductCard: FC<Props> = ({
             от <b>{price}</b>
           </span>
 
-          <Button variant={"secondary"} className="text-base font-bold">
-            <Plus size={20} className="mr-1" />
-            Добавить
-          </Button>
+          <Link href={"/product/" + id}>
+            <Button variant={"secondary"} className="text-base font-bold">
+              <Plus size={20} className="mr-1" />
+              Добавить
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
