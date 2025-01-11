@@ -8,13 +8,15 @@ import { User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Props {
+  hasCart?: boolean;
+  hasSearch?: boolean;
   className?: string;
 }
 
-export const Header: React.FC<Props> = ({ className }) => {
+export const Header: React.FC<Props> = ({ className, hasSearch = true, hasCart = true }) => {
   return (
     <header className={className}>
-      <Container className="flex items-center justify-between py-8">
+      <Container className="flex border-b items-center justify-between py-8">
         <Link href="/" className="flex items-center gap-4">
           <Image src="/logo.png" alt="Logo" width={35} height={35} />
 
@@ -24,17 +26,18 @@ export const Header: React.FC<Props> = ({ className }) => {
           </div>
         </Link>
 
-        <div className="mx-10 flex-1">
-          <SearchInput />
-        </div>
-
+        {hasSearch && (
+          <div className="mx-10 flex-1">
+            <SearchInput />
+          </div>
+        )}
         <div className={cn('flex items-center gap-4', className)}>
           <Button variant="outline" className="flex items-center gap-3">
             <User size={16} />
             Войти
           </Button>
 
-          <CartButton />
+          {hasCart && <CartButton />}
         </div>
       </Container>
     </header>
