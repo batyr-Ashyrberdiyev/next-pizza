@@ -8,27 +8,27 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { FC, PropsWithChildren, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "../ui";
 import { ArrowRight } from "lucide-react";
+import { getCartItemDetails } from "@/lib";
 import { useCartStore } from "@/store/cart";
 import { CartDrawerItem } from "./cart-drawer-item";
-import { getCartItemDetails } from "@/lib";
+import { FC, PropsWithChildren, useEffect } from "react";
 import { PizzaSize, PizzaType } from "@/constantans/pizza";
 
 export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
   const [
     items,
-    fetchCartItems,
     totalAmount,
     removeCartItem,
+    fetchCartItems,
     updateItemQuantity,
   ] = useCartStore((state) => [
     state.items,
-    state.fetchCartItems,
     state.totalAmount,
     state.removeCartItem,
+    state.fetchCartItems,
     state.updateItemQuantity,
   ]);
 
@@ -60,6 +60,7 @@ export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
           {items.map((item) => {
             return (
               <CartDrawerItem
+                disabled
                 className="mb-2"
                 key={item.id}
                 id={item.id}
