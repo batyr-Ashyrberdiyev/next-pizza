@@ -6,3 +6,4 @@ export { Slider } from "./slider";
 export { Skeleton } from "./skeleton";
 export { Sheet } from "./sheet";
 export { Dialog } from "./dialog";
+export { Textarea } from "./textarea";
