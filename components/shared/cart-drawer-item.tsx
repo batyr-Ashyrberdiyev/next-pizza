@@ -1,14 +1,14 @@
-import { FC } from 'react';
-import { cn } from '@/lib/utils';
-import { CountButton } from './';
-import { Trash2Icon } from 'lucide-react';
-import * as CartItem from './cart-item-details';
-import { CartItemProps } from './cart-item-details/cart-item-details.types';
+import { FC } from "react";
+import { cn } from "@/lib/utils";
+import { CountButton } from "./";
+import { Trash2Icon } from "lucide-react";
+import * as CartItem from "./cart-item-details";
+import { CartItemProps } from "./cart-item-details/cart-item-details.types";
 
 interface Props extends CartItemProps {
   className?: string;
-  onCLickRemove?: VoidFunction;
-  onClickCountButton: (type: 'plus' | 'minus') => void;
+  onClickRemove?: VoidFunction;
+  onClickCountButton: (type: "plus" | "minus") => void;
 }
 
 export const CartDrawerItem: FC<Props> = ({
@@ -20,18 +20,19 @@ export const CartDrawerItem: FC<Props> = ({
   quantity,
   disabled,
   className,
-  onCLickRemove,
+  onClickRemove,
   onClickCountButton,
 }) => {
   return (
     <div
       className={cn(
-        'flex bg-white p-5 gap-6',
+        "flex bg-white p-5 gap-6",
         {
-          'opacity-50 pointer-events-none': disabled,
+          "opacity-50 pointer-events-none": disabled,
         },
-        className,
-      )}>
+        className
+      )}
+    >
       <CartItem.Image src={imageUrl} />
 
       <div className="flex-1 ">
@@ -45,7 +46,7 @@ export const CartDrawerItem: FC<Props> = ({
           <div className="flex items-center gap-3">
             <CartItem.Price value={price} />
             <Trash2Icon
-              onClick={onCLickRemove}
+              onClick={onClickRemove}
               className="text-gray-400 cursor-pointer hover:text-gray-600"
               size={16}
             />
