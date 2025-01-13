@@ -1,4 +1,7 @@
-'use client';
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
 
 import {
   Sheet,
@@ -8,57 +11,56 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '../ui/sheet';
-import Link from 'next/link';
-import { Button } from '../ui';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { getCartItemDetails } from '@/lib';
-import { useCartStore } from '@/store/cart';
-import { CartDrawerItem } from './cart-drawer-item';
-import { FC, PropsWithChildren, useEffect } from 'react';
-import { PizzaSize, PizzaType } from '@/constantans/pizza';
-import Image from 'next/image';
-import { Title } from './title';
-import { cn } from '@/lib/utils';
+} from "../ui/sheet";
+
+import { Button } from "../ui";
+import { Title } from "./title";
+import { cn } from "@/lib/utils";
+import { getCartItemDetails } from "@/lib";
+import { FC, PropsWithChildren, useState } from "react";
+import { CartDrawerItem } from "./cart-drawer-item";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { PizzaSize, PizzaType } from "@/constantans/pizza";
+import { useCart } from "@/hooks";
 
 export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
-  const [items, totalAmount, removeCartItem, fetchCartItems, updateItemQuantity] = useCartStore(
-    (state) => [
-      state.items,
-      state.totalAmount,
-      state.removeCartItem,
-      state.fetchCartItems,
-      state.updateItemQuantity,
-    ],
-  );
+  const { onClickCountButton, totalAmount, items, removeCartItem } = useCart();
 
-  useEffect(() => {
-    fetchCartItems();
-  }, []);
-
-  const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
-    const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
-    updateItemQuantity(id, newQuantity);
-  };
+  const [redirecting, setRedirecting] = useState(false);
 
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
 
       <SheetContent className="flex flex-col justify-between pb-0 bg-[#F4F1EE]">
-        <div className={cn('flex flex-col h-full', !totalAmount && 'justify-center')}>
+        <div
+          className={cn(
+            "flex flex-col h-full",
+            !totalAmount && "justify-center"
+          )}
+        >
           {totalAmount > 0 && (
             <SheetHeader>
               <SheetTitle>
-                В корзине <span className="font-bold">{items.length} товара</span>
+                В корзине{" "}
+                <span className="font-bold">{items.length} товара</span>
               </SheetTitle>
             </SheetHeader>
           )}
 
           {!totalAmount && (
             <div className="flex flex-col items-center justify-center w-72 mx-auto">
-              <Image src="/assets/images/empty-box.png" alt="Empty cart" width={120} height={120} />
-              <Title size="sm" text="Корзина пустая" className="text-center font-bold my-2" />
+              <Image
+                src="/assets/images/empty-box.png"
+                alt="Empty cart"
+                width={120}
+                height={120}
+              />
+              <Title
+                size="sm"
+                text="Корзина пустая"
+                className="text-center font-bold my-2"
+              />
               <p className="text-center text-neutral-500 mb-5">
                 Добавьте хотя бы одну пицуу, чтобы совершить заказ
               </p>
@@ -83,22 +85,18 @@ export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
                       key={item.id}
                       id={item.id}
                       imageUrl={item.imageUrl}
-                      details={
-                        item.pizzaSize && item.pizzaType
-                          ? getCartItemDetails(
-                              item.ingredients,
-                              item.pizzaType as PizzaType,
-                              item.pizzaSize as PizzaSize,
-                            )
-                          : ''
-                      }
+                      details={getCartItemDetails(
+                        item.ingredients,
+                        item.pizzaType as PizzaType,
+                        item.pizzaSize as PizzaSize
+                      )}
                       name={item.name}
                       price={item.price}
                       quantity={item.quantity}
                       onClickCountButton={(type) =>
                         onClickCountButton(item.id, item.quantity, type)
                       }
-                      onCLickRemove={() => removeCartItem(item.id)}
+                      onClickRemove={() => removeCartItem(item.id)}
                     />
                   );
                 })}
@@ -114,8 +112,13 @@ export const CartDrawer: FC<PropsWithChildren> = ({ children }) => {
                     <span className="font-bold text-lg ">{totalAmount}₱</span>
                   </div>
 
-                  <Link href="/cart">
-                    <Button type="submit" className="w-full h-12 text-base">
+                  <Link href="/checkout">
+                    <Button
+                      type="submit"
+                      loading={redirecting}
+                      onClick={() => setRedirecting(true)}
+                      className="w-full h-12 text-base"
+                    >
                       Оформить заказ
                       <ArrowRight className="w-5 ml-2" />
                     </Button>
