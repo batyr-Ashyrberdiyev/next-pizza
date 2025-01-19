@@ -1,13 +1,12 @@
-'use client';
+"use client";
 
-import { FC, useEffect } from 'react';
-import { Title } from './title';
-import { cn } from '@/lib/utils';
-import { ProductCard } from './product-card';
-import { useIntersectionObserver } from 'usehooks-ts';
-import { useZusCategory } from '@/store/category';
-import { ProductWithRelations } from '@/@types/prisma';
-import { Ingredient } from '@prisma/client';
+import { FC, useEffect } from "react";
+import { Title } from "./title";
+import { cn } from "@/lib/utils";
+import { ProductCard } from "./product-card";
+import { useIntersectionObserver } from "usehooks-ts";
+import { useZusCategory } from "@/store/category";
+import { ProductWithRelations } from "@/@types/prisma";
 
 interface Props {
   title: string;
@@ -39,7 +38,7 @@ export const ProductGroupList: FC<Props> = ({
     <div className={className} id={title} ref={ref}>
       <Title text={title} size="lg" className="font-extrabold mb-5" />
 
-      <div className={cn('grid grid-cols-3 gap-[50px]', listClassName)}>
+      <div className={cn("grid grid-cols-3 gap-[50px]", listClassName)}>
         {items.map((product, i) => (
           <ProductCard
             key={i}
